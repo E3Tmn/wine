@@ -9,11 +9,8 @@ import os
 import argparse
 
 
-def fetch_booze():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--filename', default=os.getenv("FILE_WITH_BOOZE"))
-    args = parser.parse_args()
-    excel_data_df = pandas.read_excel(args.filename, sheet_name='Лист1', na_values=['N/A', 'NA'], keep_default_na=False)
+def fetch_booze(filename):
+    excel_data_df = pandas.read_excel(filename, sheet_name='Лист1', na_values=['N/A', 'NA'], keep_default_na=False)
     alcohol_df = excel_data_df.to_dict(orient='records')
     cards_for_site = collections.defaultdict(list)
     for product in alcohol_df:
@@ -23,8 +20,8 @@ def fetch_booze():
 
 def get_difference():
     word = "лет"
-    YEAR_OF_FOUNDATION = 1920
-    time_diff = datetime.datetime.today().year - YEAR_OF_FOUNDATION
+    foundation_year = 1920
+    time_diff = datetime.datetime.today().year - foundation_year
     if time_diff % 10 == 1:
         word = 'год'
     elif time_diff % 10 > 1 and time_diff % 10 < 5:
@@ -34,6 +31,10 @@ def get_difference():
 
 def main():
     load_dotenv()
+    parser = argparse.ArgumentParser(
+        description='Программа позволяет выбрать файл, данные из которого будут отображаться на сайте')
+    parser.add_argument('--filename', default=os.environ["FILE_WITH_BOOZE"], help='Имя файла с продукцией')
+    args = parser.parse_args()
     env = Environment(
         loader=FileSystemLoader('.'),
         autoescape=select_autoescape(['html', 'xml'])
@@ -41,7 +42,7 @@ def main():
     template = env.get_template('template.html')
     rendered_page = template.render(
         time=get_difference(),
-        products=fetch_booze()
+        products=fetch_booze(args.filename)
     )
     with open('index.html', 'w', encoding="utf8") as file:
         file.write(rendered_page)
