@@ -114,30 +114,30 @@
           </div>
         </div>
         {% for wines in products %}
-        <div class="col-12 section-title text-center mb-5">
-          <h2 class="d-block">{{wines}}</h2>
-        </div>
-        <div class="row">  
-          {% for i in range(products[wines]|length) %}
-          <div class="col-lg-4 mb-5 col-md-6">
-            <div class="wine_v_1 text-center pb-4 pt-5">
-              {% if products[wines][i]['Акция'] %}
-              <img src="assets/profitable.png" style="width:10rem;height: 10rem;position:absolute;right: -20px;top: -20px;">
-              {% endif %}
-              <img src='images/{{products[wines][i]["Картинка"]}}' alt="Image" class="img-fluid">
-              <div>
-                <h3 class="heading mt-3 mb-3 text-dark">{{products[wines][i]['Название']}}</h3>
-                <p>
-                  {% if products[wines][i]['Сорт'] %}
-                  Сорт винограда - {{products[wines][i]['Сорт']}}<br/>
-                  {% endif %}
-                  <span class="price">{{products[wines][i]['Цена']}} р.</span>
-                </p>
-              </div>
-            </div>
+          <div class="col-12 section-title text-center mb-5">
+            <h2 class="d-block">{{wines}}</h2>
           </div>
-          {% endfor %}
-        </div>
+          <div class="row">  
+            {% for wine in products[wines] %}
+              <div class="col-lg-4 mb-5 col-md-6">
+                <div class="wine_v_1 text-center pb-4 pt-5">
+                  {% if wine['Акция'] %}
+                    <img src="assets/profitable.png" style="width:10rem;height: 10rem;position:absolute;right: -20px;top: -20px;">
+                  {% endif %}
+                  <img src='images/{{wine["Картинка"]}}' alt="Image" class="img-fluid">
+                  <div>
+                    <h3 class="heading mt-3 mb-3 text-dark">{{wine['Название']}}</h3>
+                    <p>
+                      {% if wine['Сорт'] %}
+                        Сорт винограда - {{wine['Сорт']}}<br/>
+                      {% endif %}
+                      <span class="price">{{wine['Цена']}} р.</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
         {% endfor %}
       </div>
     </div>
